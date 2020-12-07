@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../App.css';
+import ExtendSession from './ExtendSession.component';
 
 function Login(props) {
 
@@ -28,6 +29,8 @@ function Login(props) {
             })
             .then((data) => {
                 window.localStorage.setItem("Auth-Token", data);
+                window.localStorage.setItem("expiryDate", new Date(new Date().getTime() + 10 * 60 * 1000));
+
                 console.log("Done! Token: " + data);
                 props.history.push("/register");
             })
@@ -37,6 +40,8 @@ function Login(props) {
     }
 
     return (
+        <>
+        <ExtendSession/>
         <form>
             <h3>Login Now!</h3>
             <div className="form-group">
@@ -57,6 +62,7 @@ function Login(props) {
             </div>
             <button type="submit" onClick={loginHandler} className="btn btn-primary btn-block">Submit</button>
         </form>
+        </>
     )
 }
 

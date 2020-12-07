@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
+import ExtendSession from './ExtendSession.component';
 
 const fileToDataUri = (file) => new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -19,7 +20,6 @@ function Register() {
     const [nric, setNRIC] = useState("");
     const [regTime, setRegTime] = useState(new Date().toLocaleString());
     const [branchCode, setBranchCode] = useState("");
-    const [image, setImage] = useState("[]");
     const [products, setProducts] = useState([]);
 
     const handleChange = (e) => {
@@ -36,8 +36,6 @@ function Register() {
                     setDataUri(dataUri)
                 })
 
-            setImage(e.target.files[0]);
-            //console.log(dataUri);
         }
         else {
             console.log("File size limit exceeded.");
@@ -77,19 +75,19 @@ function Register() {
         console.log("AUTH-TOKEN: " + window.localStorage.getItem("Auth-Token"));
         fetch(url, {
             method: "POST",
-            mode: "cors",
+            //mode: "cors",
             headers: {
-                "Content-Type": "application/json",
-                "Key": "",
-                "Authorization": `Bearer ${window.localStorage.getItem("Auth-Token")}`
+                //"Content-Type": "application/json",
+                //"Key": "",
+                "Authorization": `token ${window.localStorage.getItem("Auth-Token")}`
             },
             body: JSON.stringify({
                 customerName: name,
-                customerAge: age,
+                customerAge: Number(age),
                 serviceOfficerName: officer,
                 NRIC: nric,
                 registrationTime: regTime.slice(0, 10) + ' ' + regTime.slice(12, 20),
-                branchCode: branchCode,
+                branchCode: Number(branchCode),
                 image: dataUri,
                 productType: products
             }),
@@ -103,6 +101,8 @@ function Register() {
     };
 
     return (
+        <>
+        <ExtendSession/>
         <form>
             <h3>Register New Customer</h3>
             <div className="form-group">
@@ -163,7 +163,7 @@ function Register() {
             <button type="submit" onClick={submitHandler} className="btn btn-primary btn-block">Create</button>
 
         </form>
-
+        </>
     )
 }
 
